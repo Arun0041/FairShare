@@ -93,10 +93,11 @@ Keep this file in the repo and **commit it** with your fixes.
 
 ## Bug 8
 
-**How to reproduce:**
+**How to reproduce:** In the "Summary" card, type a new member's name into the "Add member" field and click "Add".
 
-**What is wrong:**
+**What is wrong:** The new member was added to the group count, but did not appear in the "Paid so far" list ($0.00) until an expense was created or modified. In `SummaryCards.jsx`, the `perPerson` calculation was memoized with dependency array `[expenses]`, omitting `members`.
 
 **What I changed:**
+- In `src/components/SummaryCards.jsx`, updated the `useMemo` dependency array for `perPerson` to `[members, expenses]` so adding a member immediately reflects across the "Paid so far" list.
 
 ---
