@@ -44,6 +44,17 @@ Keep this file in the repo and **commit it** with your fixes.
 
 ## Bug 4
 
+**How to reproduce:** Check an expense where the payer is not part of the split (such as the default "Uber to airport" expense: $60 paid by Diya Patel, split equally only between Aisha and Ben). Check Diya's balance in the Balances panel.
+
+**What is wrong:** The payer who was not involved in the split had a portion of the bill deducted from their balance anyway. In the Uber example, Diya paid $60 and consumed $0, but was only credited $30 because the code subtracted $60 / 2 from her balance. This violated the zero-sum principle across the group.
+
+**What I changed:**
+- In `src/lib/balances.js`, removed the erroneous condition that subtracted `amount / n` from the payer when the payer was not in `splitWith`. Payer balances are credited the full amount paid, and only members in `splitWith` have their shares deducted.
+
+---
+
+## Bug 5
+
 **How to reproduce:**
 
 **What is wrong:**
