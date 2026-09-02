@@ -101,3 +101,19 @@ Keep this file in the repo and **commit it** with your fixes.
 - In `src/components/SummaryCards.jsx`, updated the `useMemo` dependency array for `perPerson` to `[members, expenses]` so adding a member immediately reflects across the "Paid so far" list.
 
 ---
+
+## Bug 9
+
+**How to reproduce:** In "Add expense", fill in a description and amount, then click "Save expense". Also, type an invalid amount (e.g. text or a negative value) into an expense edit input and click outside.
+
+**What is wrong:** 
+1. The "Add expense" form did not clear its `description` and `amount` fields after saving, forcing the user to manually delete old inputs before adding a new expense.
+2. In `ExpenseRow`, invalid or unchanged draft values remained displayed in the input field upon blur rather than reverting to the existing saved amount.
+3. In `store.js`, `loadState` returned raw JSON from `localStorage` without hydrating date strings back into proper `Date` instances.
+
+**What I changed:**
+- In `src/components/AddExpenseForm.jsx`, reset `description` and `amount` state to empty strings after `onAdd` executes.
+- In `src/components/ExpenseList.jsx`, added an `else` branch in `onBlur` to reset `draft` back to `String(expense.amount)` when input is invalid or non-positive.
+- In `src/state/store.js`, wrapped the parsed `localStorage` data with `hydrate(JSON.parse(raw))` in `loadState`.
+
+---
