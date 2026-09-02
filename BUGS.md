@@ -20,6 +20,19 @@ Keep this file in the repo and **commit it** with your fixes.
 
 ## Bug 2
 
+**How to reproduce:** In the expense list, click "Delete" on the top expense ("Board game" on 15 Mar) or filter/search expenses and edit an expense amount.
+
+**What is wrong:** The app deleted or updated the wrong expense. Deletion and editing used array index `index` from the filtered/sorted list, which did not correspond to the index in the underlying `expenses` state array. Also, using `key={index}` caused React to retain stale input state across list re-renders.
+
+**What I changed:**
+- In `src/state/store.js`, updated `DELETE_EXPENSE` and `UPDATE_EXPENSE` actions in `reducer` to identify expenses by `action.id` instead of array index.
+- In `src/components/ExpenseList.jsx`, keyed rows by `expense.id` (`key={expense.id}`), passed `expense.id` to `onDelete` and `onSaveAmount`, and added a `useEffect` in `ExpenseRow` to synchronize input `draft` with `expense.amount`.
+- In `src/App.jsx`, updated `onDelete` and `onUpdate` handlers to dispatch actions with `id`.
+
+---
+
+## Bug 3
+
 **How to reproduce:**
 
 **What is wrong:**
