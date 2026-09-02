@@ -21,31 +21,23 @@ export function suggestSettlements(balances, members) {
   while (i < debtors.length && j < creditors.length) {
     const d = debtors[i];
     const c = creditors[j];
+    const settleAmount = Math.min(d.amount, c.amount);
 
-    if (d.amount > c.amount) {
+    if (settleAmount > 0.001) {
       transfers.push({
         from: d.id,
         to: c.id,
         fromName: nameOf(d.id),
         toName: nameOf(c.id),
-        amount: c.amount,
+        amount: Number(settleAmount.toFixed(2)),
       });
-      d.amount -= c.amount;
-      j += 1;
-    } else if (d.amount < c.amount) {
-      transfers.push({
-        from: d.id,
-        to: c.id,
-        fromName: nameOf(d.id),
-        toName: nameOf(c.id),
-        amount: d.amount,
-      });
-      c.amount -= d.amount;
-      i += 1;
-    } else {
-      i += 1;
-      j += 1;
     }
+
+    d.amount -= settleAmount;
+    c.amount -= settleAmount;
+
+    if (d.amount <= 0.001) i += 1;
+    if (c.amount <= 0.001) j += 1;
   }
 
   return transfers;

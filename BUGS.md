@@ -55,6 +55,17 @@ Keep this file in the repo and **commit it** with your fixes.
 
 ## Bug 5
 
+**How to reproduce:** In a group where a member's debt exactly equals another member's credit (for example, Person A owes $50 and Person B is owed $50), check the "Settle up" panel.
+
+**What is wrong:** The "Settle up" panel displayed "Everyone is settled." even when members had outstanding non-zero balances. In `suggestSettlements`, the `else` branch (when `d.amount === c.amount`) only incremented both pointers (`i += 1; j += 1;`) without pushing the transfer to the result array, dropping equal-amount settlements.
+
+**What I changed:**
+- In `src/lib/settle.js`, updated `suggestSettlements` to determine `settleAmount = Math.min(d.amount, c.amount)` and push the transfer for all valid amounts before advancing index pointers, ensuring equal balances are accurately recorded and settled.
+
+---
+
+## Bug 6
+
 **How to reproduce:**
 
 **What is wrong:**
