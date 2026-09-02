@@ -66,6 +66,17 @@ Keep this file in the repo and **commit it** with your fixes.
 
 ## Bug 6
 
+**How to reproduce:** In the "Filter" card, select any member from the "Paid by" dropdown (e.g. "Ben Okonkwo").
+
+**What is wrong:** The expense list displayed "No expenses match these filters." even though that member had multiple paid expenses. In `App.jsx`, the filter comparison used strict inequality `e.paidBy !== paidBy`, comparing a numeric `paidBy` (e.g. `2`) with a string value from the `<select>` element (e.g. `"2"`), which always evaluated to `false`.
+
+**What I changed:**
+- In `src/App.jsx`, changed the filter check to `Number(e.paidBy) !== Number(paidBy)` to ensure proper numeric type coercion when filtering expenses by payer.
+
+---
+
+## Bug 7
+
 **How to reproduce:**
 
 **What is wrong:**
