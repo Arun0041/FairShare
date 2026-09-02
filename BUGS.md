@@ -33,6 +33,17 @@ Keep this file in the repo and **commit it** with your fixes.
 
 ## Bug 3
 
+**How to reproduce:** Look at the "Balances" card on the right side of the app.
+
+**What is wrong:** The labels and styling for member balances were completely inverted. Members with a positive balance (who paid more than their share and should be credited by the group) were displayed in red with "owes $X.XX", while members with a negative balance (who owe money to the group) were displayed in green with "is owed $X.XX".
+
+**What I changed:**
+- In `src/components/BalancesPanel.jsx`, swapped the conditions and CSS classes so that `bal > 0.005` displays `"is owed ${formatMoney(bal)}"` with class `"owed"`, and `bal < -0.005` displays `"owes ${formatMoney(-bal)}"` with class `"owe"`.
+
+---
+
+## Bug 4
+
 **How to reproduce:**
 
 **What is wrong:**
