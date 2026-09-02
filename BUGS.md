@@ -77,6 +77,22 @@ Keep this file in the repo and **commit it** with your fixes.
 
 ## Bug 7
 
+**How to reproduce:** Add an expense of $100 split equally among 3 people, or enter custom percentages that total 100% (such as 33.33%, 33.33%, 33.34%).
+
+**What is wrong:** 
+1. In `splitEqual`, each share was rounded independently to 2 decimal places ($33.33 each), causing the sum of shares to equal $99.99 and losing $0.01 from the group total.
+2. In `percentsSumTo100`, floating point addition without precision tolerance caused valid percentages summing to 100.00% (e.g. `33.33 + 33.33 + 33.34 = 100.00000000000001`) to fail validation.
+3. In `splitByPercent`, rounded percentage splits could invent or lose cents from the total amount.
+
+**What I changed:**
+- In `src/lib/money.js`, updated `splitEqual` to calculate base cents and distribute remainder cents evenly across participants so the sum of individual shares always matches the total bill exactly.
+- In `src/lib/money.js`, updated `percentsSumTo100` with epsilon tolerance (`Math.abs(sum - 100) < 0.01`) to prevent floating-point precision validation errors.
+- In `src/lib/money.js`, updated `splitByPercent` to ensure total allocated dollar cents exactly cover the expense amount without rounding drift.
+
+---
+
+## Bug 8
+
 **How to reproduce:**
 
 **What is wrong:**
